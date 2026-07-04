@@ -1,113 +1,152 @@
-<!DOCTYPE html>
+      <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather App</title>
     <style>
+        /* 1. Dynamic Gradient Background */
         body {
-            background: #8b48d7;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
+            color: white;
         }
 
+        /* 2. True Glassmorphism Card */
         #weather-container {
-            background: #7b12b8;
-            max-width: 500px;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.096);
+            background: rgba(255, 255, 255, 0.1);
+            max-width: 450px;
+            width: 90%;
+            padding: 30px;
+            border-radius: 24px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             text-align: center;
         }
 
-        h2, label, p {
-            color: #fff;
-            margin: 8px 0;
+        h2 { margin-top: 0; font-weight: 500; letter-spacing: 1px; }
+
+        /* 3. Modern Search Bar Layout */
+        .search-box {
+            display: flex;
+            gap: 12px;
+            margin: 20px 0;
         }
 
         input {
-            width: calc(100% - 16px);
-            padding: 8px;
-            box-sizing: border-box;
-            border-radius: 10px;
-            border: 1px solid white;
-            margin-top: 20px;
+            flex: 1;
+            padding: 12px 20px;
+            border-radius: 25px;
+            border: none;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 16px;
+            outline: none;
+            transition: background 0.3s ease;
         }
 
+        input::placeholder { color: rgba(255, 255, 255, 0.7); }
+        input:focus { background: rgba(255, 255, 255, 0.3); }
+
         button {
-            background: #debff4;
-            color: white;
-            padding: 10px;
+            background: white;
+            color: #764ba2;
+            padding: 12px 24px;
             border: none;
-            border-radius: 10px;
+            border-radius: 25px;
             cursor: pointer;
-            margin-top: 20px;
-            width: 100px;
-            font-size: 15px;
+            font-size: 16px;
+            font-weight: 600;
+            transition: transform 0.2s, background 0.3s;
         }
 
         button:hover {
-            background: #8b48d7;
+            background: #f0f0f0;
+            transform: scale(1.05);
         }
 
+        /* 4. Emphasize the Temperature */
         #temp-div p {
-            font-size: 60px;
-            margin-top: -30px;
+            font-size: 72px;
+            font-weight: 300;
+            margin: 0;
+            line-height: 1;
         }
 
         #weather-info {
-            font-size: 20px;
+            font-size: 22px;
+            font-weight: 500;
+            margin-bottom: 30px;
         }
+
+        .city-name { font-size: 32px; font-weight: 600; margin-bottom: 5px; }
+        .description { text-transform: capitalize; color: rgba(255,255,255,0.8); }
 
         #weather-icon {
-            width: 200px;
-            height: 200px;
-            margin: 0 auto 10px; 
-            margin-bottom: 0;
+            width: 160px;
+            height: 160px;
+            margin: -10px auto -20px; 
             display: none;
+            filter: drop-shadow(0 8px 16px rgba(0,0,0,0.2)); /* Gives the icon depth */
         }
 
+        /* 5. Sleek Scrollable Hourly Forecast */
         #hourly-forecast {
-            margin-top: 50px;
+            margin-top: 30px;
+            padding-bottom: 10px;
             overflow-x: auto;
             white-space: nowrap;
             display: flex;
-            justify-content: space-between;
+            gap: 15px;
+            scrollbar-width: thin; /* Firefox */
+            scrollbar-color: rgba(255,255,255,0.4) transparent;
+        }
+
+        /* Hide scrollbar for Chrome/Safari but keep functionality */
+        #hourly-forecast::-webkit-scrollbar { height: 6px; }
+        #hourly-forecast::-webkit-scrollbar-track { background: transparent; }
+        #hourly-forecast::-webkit-scrollbar-thumb { 
+            background: rgba(255,255,255,0.3); 
+            border-radius: 10px; 
         }
 
         .hourly-item {
-            flex: 0 0 auto;
-            width: 80px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 18px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-right: 10px;
-            color: white;
+            min-width: 70px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .hourly-item img {
-            width: 30px;
-            height: 30px;
-            margin-bottom: 5px;
+            width: 45px;
+            height: 45px;
+            margin: 8px 0;
         }
 
-        #hourly-heading {
-            color: #fff;
-            margin-top: 10px;
-        }
+        .hourly-time { font-size: 14px; color: rgba(255,255,255,0.9); }
+        .hourly-temp { font-size: 18px; font-weight: 600; }
+
     </style>
 </head>
 <body>
     <div id="weather-container">
-        <h2>Weather App</h2>
-        <input type="text" id="city" placeholder="Enter city">
-        <button id="search-btn">Search</button>
+        <h2>Weather Forecast</h2>
+        
+        <div class="search-box">
+            <input type="text" id="city" placeholder="Enter city name...">
+            <button id="search-btn">Search</button>
+        </div>
 
         <img id="weather-icon" alt="Weather Icon">
 
@@ -115,8 +154,16 @@
         <div id="weather-info"></div>
         <div id="hourly-forecast"></div>
     </div>
+
     <script>
         document.getElementById('search-btn').addEventListener('click', getWeather);
+        
+        // Allow pressing "Enter" in the input field to trigger the search
+        document.getElementById('city').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                getWeather();
+            }
+        });
 
         function getWeather() {
             const apiKey = '8a28e613605d28392131f3e8b7e5958f';
@@ -157,7 +204,6 @@
             const weatherIcon = document.getElementById('weather-icon');
             const hourlyForecastDiv = document.getElementById('hourly-forecast');
 
-            // Clear previous content
             weatherInfoDiv.innerHTML = '';
             hourlyForecastDiv.innerHTML = '';
             tempDivInfo.innerHTML = '';
@@ -166,18 +212,17 @@
                 weatherInfoDiv.innerHTML = `<p>${data.message}</p>`;
             } else {
                 const cityName = data.name;
-                const temperature = Math.round(data.main.temp - 273.15); // Convert to Celsius
+                const temperature = Math.round(data.main.temp - 273.15); 
                 const description = data.weather[0].description;
                 const iconCode = data.weather[0].icon;
                 const iconUrl = `https://openweathermap.org/img/wn/${iconCode}@4x.png`;
 
-                const temperatureHTML = `
-                    <p>${temperature}°C</p>
-                `;
+                const temperatureHTML = `<p>${temperature}°C</p>`;
 
+                // Added dedicated classes for better styling control
                 const weatherHtml = `
-                    <p>${cityName}</p>
-                    <p>${description}</p>
+                    <div class="city-name">${cityName}</div>
+                    <div class="description">${description}</div>
                 `;
 
                 tempDivInfo.innerHTML = temperatureHTML;
@@ -191,21 +236,27 @@
 
         function displayHourlyForecast(hourlyData) {
             const hourlyForecastDiv = document.getElementById('hourly-forecast');
-
-            const next24Hours = hourlyData.slice(0, 8); // Display the next 24 hours (3-hour intervals)
+            const next24Hours = hourlyData.slice(0, 8); 
 
             next24Hours.forEach(item => {
-                const dateTime = new Date(item.dt * 1000); // Convert timestamp to milliseconds
-                const hour = dateTime.getHours();
-                const temperature = Math.round(item.main.temp - 273.15); // Convert to Celsius
+                const dateTime = new Date(item.dt * 1000); 
+                
+                // Format hour to 12-hour AM/PM format instead of military time
+                let hour = dateTime.getHours();
+                const ampm = hour >= 12 ? 'PM' : 'AM';
+                hour = hour % 12;
+                hour = hour ? hour : 12; 
+                const timeString = `${hour} ${ampm}`;
+
+                const temperature = Math.round(item.main.temp - 273.15); 
                 const iconCode = item.weather[0].icon;
                 const iconUrl = `https://openweathermap.org/img/wn/${iconCode}.png`;
 
                 const hourlyItemHtml = `
                     <div class="hourly-item">
-                        <span>${hour}:00</span>
+                        <span class="hourly-time">${timeString}</span>
                         <img src="${iconUrl}" alt="Hourly Weather Icon">
-                        <span>${temperature}°C</span>
+                        <span class="hourly-temp">${temperature}°</span>
                     </div>
                 `;
 
@@ -215,8 +266,9 @@
 
         function showImage() {
             const weatherIcon = document.getElementById('weather-icon');
-            weatherIcon.style.display = 'block'; // Make the image visible once it's loaded
+            weatherIcon.style.display = 'block'; 
         }
     </script>
 </body>
 </html>
+          
